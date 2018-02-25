@@ -45,7 +45,7 @@ class DegoosSpigot:
         authorid = ctx.message.author.id
         data = requests.get(self.url + "username=" + your_spigot_account).json()
 
-        self.bot.say('JSON Parsed: ' + str(data))
+        await self.bot.say('JSON Parsed: ' + str(data))
         if 'bought' in data:
             if authorid in self.verified_users["users"]:
                 if self.verified_users["users"][authorid]["verified"]:
@@ -58,7 +58,6 @@ class DegoosSpigot:
             await self.bot.say('You haven\'t bought any of our plugins.')
 
     @verify.command(pass_context=True)
-    @checks.is_owner()
     async def auth(self, ctx, authcode: str):
         """Confirm authorization code"""
 
@@ -70,6 +69,13 @@ class DegoosSpigot:
         # else:
         #     await self.bot.say("I won't reply on mention anymore.")
         # dataIO.save_json("data/apiai/settings.json", self.settings)
+
+    @verify.command(pass_context=True)
+    @checks.is_owner()
+    async def refresh(self, ctx):
+        """Confirm authorization code"""
+        self.verified_users = {"users": {}}
+        await self.bot.say("Verification list cleaned.")
 
 
 def check_folders():
