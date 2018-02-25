@@ -11,9 +11,9 @@ class DegoosSpigot:
         self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/checkbuyer?user_id="
 
     @commands.command()
-    async def verify(self):
+    async def verify(self, spigotID):
         """Verify the user and his plugins!"""
-        response = requests.get(self.url + '31163')
+        response = requests.get(self.url + spigotID)
         data = response.json()
 
         #Your code will go here
