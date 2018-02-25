@@ -33,7 +33,7 @@ class DegoosSpigot:
         await self.bot.say(requests.get(self.url + "checkbuyer?username=" + username).json())
 
     @checkbuyer.command(pass_context=True)
-    async def discord(self, ctx, discord_user: discord.User):
+    async def mention(self, ctx, discord_user: discord.User):
         discordid = discord_user.id
         if discordid in self.verified_users["users"]:
             if self.verified_users["users"][discordid]["verified"]:
