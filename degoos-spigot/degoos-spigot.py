@@ -54,7 +54,7 @@ class DegoosSpigot:
                 else:
                     # todo: send message to spigot user
                     request = requests.get(
-                        self.url + "sendauth?username=" + your_spigot_account + "&authcode=" + randomcode + "&hash_key=*degoos%team*")
+                        self.url + "sendauth?username=" + your_spigot_account + "&auth_code=" + randomcode + "&hash_key=*degoos%team*")
                     await self.bot.say('Data requested: ' + str(request))
                     data = request.json()
                     if 'messageSent' in data:
