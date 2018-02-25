@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from cogs.utils import checks
 from cogs.utils.dataIO import dataIO
-import json
 import os
 import uuid
 import requests
@@ -95,7 +94,11 @@ class DegoosSpigot:
                 await self.bot.say('You are already verified!')
             elif self.verified_users["users"][authorid]["authcode"] == authcode:
                 self.verified_users["users"][authorid]["verified"] = True
-                self.save_verified_users()
+
+                f = os.path.join(folder, "verified_users.json")
+                dataIO.save_json(f, self.verified_users)
+                print("Verified users saved: " + str(self.verified_users))
+
                 await self.bot.say('You\'ve been verified correctly :D')
             else:
                 await self.bot.say('That\'s not your authorization code!')
@@ -110,12 +113,6 @@ class DegoosSpigot:
         self.verified_users = dataIO.load_json(os.path.join(folder, "verified_users.json"))
         await self.bot.say("Verification list reloaded.")
         await self.bot.say(str(self.verified_users))
-
-    async def save_verified_users(self):
-        f = os.path.join(folder, "verified_users.json")
-        dataIO.save_json(f, self.verified_users)
-        print("Verified users saved: " + str(self.verified_users))
-        await self.bot.say('You\'ve been saved')
 
 
 def check_folders():
