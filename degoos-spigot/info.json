@@ -1,0 +1,9 @@
+{
+    "AUTHOR" : "IhToN",
+    "SHORT" : "Verify Degoos Premium Plugins bought on Spigot",
+    "DESCRIPTION" : "Login and check Degoos' Plugins boughts by a user",
+    "DISABLED" : false,
+    "NAME" : "DEGOOS.SPIGOT",
+    "TAGS" : ["degoos", "spigot", "degoos team", "minecraft"],
+    "INSTALL_MSG" : "Degoos Verify Plugin has been installed correctly."
+}

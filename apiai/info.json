@@ -1,0 +1,9 @@
+{
+    "AUTHOR" : "IhToN",
+    "SHORT" : "Have a custom AI!",
+    "DESCRIPTION" : "Interact with your custom AI thanks to API.AI",
+    "DISABLED" : false,
+    "NAME" : "API.AI",
+    "TAGS" : ["apiai", "cleverbot", "conversation", "ai"],
+    "INSTALL_MSG" : "Needs to be setup with an API key first. See `[p]apiai clienttoken`\n[p]apiai <text>` to talk with your bot.\n`@Mention <text>` works too.\n`[p]apiai toggle` disables replies by mention."
+}
