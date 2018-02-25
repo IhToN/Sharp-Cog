@@ -11,7 +11,7 @@ class DegoosSpigot:
         self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/checkbuyer?"
 
     @commands.command()
-    async def verify(self, type, userinfo):
+    async def checkbuyer(self, type, userinfo):
         """Verify the user and his plugins!"""
         node = ""
         if type == "id":
@@ -29,6 +29,14 @@ class DegoosSpigot:
 
         #Your code will go here
         await self.bot.say(data)
+
+    @commands.command()
+    async def punch(self, user: discord.Member):
+        """I will puch anyone! >.<"""
+
+        # Your code will go here
+        await self.bot.say("ONE PUNCH! And " + user.mention + " is out! ლ(ಠ益ಠლ)")
+
 
 def setup(bot):
     bot.add_cog(DegoosSpigot(bot))
