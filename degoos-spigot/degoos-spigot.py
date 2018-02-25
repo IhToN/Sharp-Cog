@@ -73,6 +73,7 @@ def check_folders():
 
 def check_files():
     f = os.path.join(folder, "verified_users.json")
+    os.remove(f)
     data = {"users": {}}
     if not dataIO.is_valid_json(f):
         dataIO.save_json(f, data)
