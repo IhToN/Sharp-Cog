@@ -52,6 +52,7 @@ class DegoosSpigot:
                     if self.verified_users["users"][authorid]["verified"]:
                         await self.bot.say('You are already verified!')
                 else:
+                    # todo: send message to spigot user
                     self.verified_users["users"][authorid] = {"spigotid": data["spigotid"], "authcode": str(randomcode),
                                                               "verified": False}
                 await self.bot.say('Random UUID: ' + str(self.verified_users["users"]))
@@ -63,7 +64,19 @@ class DegoosSpigot:
     @verify.command(pass_context=True)
     async def auth(self, ctx, authcode: str):
         """Confirm authorization code"""
+        authorid = ctx.message.author.id
 
+        if authorid in self.verified_users["users"]:
+            if self.verified_users["users"][authorid]["verified"]:
+                await self.bot.say('You are already verified!')
+            elif self.verified_users["users"][authorid]["authcode"] == authcode:
+                self.verified_users["users"][authorid]["verified"] = True
+                await self.bot.say('You\'ve been verified correctly :D')
+            else:
+                await self.bot.say('That\'s not your authorization code!')
+        else:
+            await self.bot.say(
+                'We couln\'t find your user in our verification list. Have you used the !verify YourUser command?')
         await self.bot.say("Authcode introducido: " + authcode)
         await self.bot.say("Usuario a comprobar: " + ctx.message.author.id)
         # self.settings["TOGGLE"] = not self.settings["TOGGLE"]
