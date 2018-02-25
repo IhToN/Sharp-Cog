@@ -29,7 +29,7 @@ class DegoosSpigot:
         await self.bot.say(requests.get(self.url + "user_id=" + userid).json())
 
     @checkbuyer.command(pass_context=True)
-    async def id(self, ctx, username):
+    async def name(self, ctx, username):
         await self.bot.say(requests.get(self.url + "username=" + username).json())
 
     @commands.command()
