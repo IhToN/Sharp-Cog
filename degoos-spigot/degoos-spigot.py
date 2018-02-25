@@ -115,6 +115,7 @@ class DegoosSpigot:
         f = os.path.join(folder, "verified_users.json")
         dataIO.save_json(f, self.verified_users)
         print("Verified users saved: " + str(self.verified_users))
+        await self.bot.say('You\'ve been saved')
 
 
 def check_folders():
