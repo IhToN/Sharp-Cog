@@ -46,16 +46,19 @@ class DegoosSpigot:
         data = requests.get(self.url + "username=" + your_spigot_account).json()
 
         await self.bot.say('JSON Parsed: ' + str(data))
-        if 'bought' in data:
-            if authorid in self.verified_users["users"]:
-                if self.verified_users["users"][authorid]["verified"]:
-                    await self.bot.say('You are already verified!')
+        if 'spigotid' in data:
+            if data['spigotid'] != -1:
+                if authorid in self.verified_users["users"]:
+                    if self.verified_users["users"][authorid]["verified"]:
+                        await self.bot.say('You are already verified!')
+                else:
+                    self.verified_users["users"][authorid] = {"spigotid": data["spigotid"], "authcode": str(randomcode),
+                                                              "verified": False}
+                await self.bot.say('Random UUID: ' + str(self.verified_users["users"]))
             else:
-                self.verified_users["users"][authorid] = {"spigotid": data["spigotid"], "authcode": str(randomcode),
-                                                          "verified": False}
-            await self.bot.say('Random UUID: ' + str(self.verified_users["users"]))
+                await self.bot.say('You haven\'t bought any of our plugins.')
         else:
-            await self.bot.say('You haven\'t bought any of our plugins.')
+            await self.bot.say('Our verification server is busy, please try again later.')
 
     @verify.command(pass_context=True)
     async def auth(self, ctx, authcode: str):
