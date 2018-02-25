@@ -16,7 +16,7 @@ class DegoosSpigot:
         self.bot = bot
         self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/"
         self.verified_users = dataIO.load_json(os.path.join(folder, "verified_users.json"))
-        print('Verified users loaded: ' + str(self.verified_users))
+        print('Verified users loaded: ' + str(len(self.verified_users)))
 
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
     async def checkbuyer(self, type, userinfo):
@@ -94,7 +94,6 @@ class DegoosSpigot:
 
                 f = os.path.join(folder, "verified_users.json")
                 dataIO.save_json(f, self.verified_users)
-                print("Verified users saved: " + str(self.verified_users))
 
                 await self.bot.say('You\'ve been verified correctly :D')
             else:
@@ -123,8 +122,6 @@ def check_files():
     data = {"users": {}}
     if not dataIO.is_valid_json(f):
         dataIO.save_json(f, data)
-    else:
-        print('Verified users found.')
 
 
 def setup(bot):
