@@ -60,7 +60,6 @@ class DegoosSpigot:
             randomcode = str(uuid.uuid4())
             data = requests.get(self.url + "checkbuyer?username=" + your_spigot_account).json()
 
-            await self.bot.say('JSON Parsed: ' + str(data))
             if 'bought' in data and 'spigotid' in data:
                 if len(data['bought']) > 0 and data['spigotid'] != -1:
                     request = requests.get(
@@ -77,8 +76,6 @@ class DegoosSpigot:
                             await self.bot.say('Something went wrong. Please try again later.')
                     else:
                         await self.bot.say('Something went wrong. Please try again later.')
-
-                    await self.bot.say('Random UUID: ' + str(self.verified_users["users"]))
                 else:
                     await self.bot.say('You haven\'t bought any of our plugins.')
             else:
