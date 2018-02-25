@@ -113,8 +113,8 @@ class DegoosSpigot:
 
     async def save_verified_users(self):
         f = os.path.join(folder, "verified_users.json")
-        if dataIO.is_valid_json(f):
-            dataIO.save_json(f, self.verified_users)
+        dataIO.save_json(f, self.verified_users)
+        print("Verified users saved: " + str(self.verified_users))
 
 
 def check_folders():
