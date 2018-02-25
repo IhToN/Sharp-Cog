@@ -7,6 +7,7 @@ import uuid
 import requests
 
 folder = os.path.join('data', 'degoos')
+verified_role = 'Verified'
 
 
 class DegoosSpigot:
@@ -84,13 +85,25 @@ class DegoosSpigot:
     @verify.command(pass_context=True)
     async def auth(self, ctx, authcode: str):
         """Confirm authorization code"""
-        authorid = ctx.message.author.id
+        author = ctx.message.author
+        authorid = author.id
+        server = ctx.message.server
 
         if authorid in self.verified_users["users"]:
             if self.verified_users["users"][authorid]["verified"]:
                 await self.bot.say('You are already verified!')
             elif self.verified_users["users"][authorid]["authcode"] == authcode:
                 self.verified_users["users"][authorid]["verified"] = True
+
+                roles = False
+                try:
+                    roles = server.roles
+                except AttributeError:
+                    print("This server has no roles... what even?\n")
+
+                if roles:
+                    role = discord.utils.get(roles, id=verified_role)
+                    await self.bot.add_roles(author, role)
 
                 f = os.path.join(folder, "verified_users.json")
                 dataIO.save_json(f, self.verified_users)
