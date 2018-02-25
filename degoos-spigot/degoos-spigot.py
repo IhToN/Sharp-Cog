@@ -17,6 +17,7 @@ class DegoosSpigot:
         self.bot = bot
         self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/"
         self.verified_users = dataIO.load_json(os.path.join(folder, "verified_users.json"))
+        print('Verified users loaded: ' + str(self.verified_users))
 
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
     async def checkbuyer(self, type, userinfo):
@@ -38,7 +39,7 @@ class DegoosSpigot:
         if discordid in self.verified_users["users"]:
             if self.verified_users["users"][discordid]["verified"]:
                 spigotid = self.verified_users["users"][discordid]["spigotid"]
-                data = requests.get(self.url + "checkbuyer?user_id=" + spigotid).json()
+                data = requests.get(self.url + "checkbuyer?user_id=" + str(spigotid)).json()
                 await self.bot.say(str(data))
             else:
                 await self.bot.say(str(discord_user) + " is not verified yet.")
@@ -127,6 +128,8 @@ def check_files():
     data = {"users": {}}
     if not dataIO.is_valid_json(f):
         dataIO.save_json(f, data)
+    else:
+        print('Verified users found.')
 
 
 def setup(bot):
