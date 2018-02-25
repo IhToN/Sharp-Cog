@@ -20,7 +20,7 @@ class DegoosSpigot:
         print('Verified users loaded: ' + str(len(self.verified_users)))
 
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
-    async def checkbuyer(self, type, userinfo):
+    async def checkbuyer(self, ctx):
         """Verify the user and his plugins!"""
 
         await self.bot.send_message(ctx.message.author, "You can only search by 'id', 'name' or 'user':\n!verify name IhToN")
