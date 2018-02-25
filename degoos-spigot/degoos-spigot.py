@@ -46,8 +46,8 @@ class DegoosSpigot:
         data = requests.get(self.url + "username=" + your_spigot_account).json()
 
         await self.bot.say('JSON Parsed: ' + str(data))
-        if 'spigotid' in data:
-            if data['spigotid'] != -1:
+        if 'bought' in data and 'spigotid' in data:
+            if len(data['bought']) > 0 and data['spigotid'] != -1:
                 if authorid in self.verified_users["users"]:
                     if self.verified_users["users"][authorid]["verified"]:
                         await self.bot.say('You are already verified!')
