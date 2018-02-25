@@ -45,6 +45,7 @@ class DegoosSpigot:
         authorid = ctx.message.author.id
         data = requests.get(self.url + "username=" + your_spigot_account).json()
 
+        self.bot.say('JSON Parsed: ' + str(data))
         if 'bought' in data:
             if authorid in self.verified_users["users"]:
                 if self.verified_users["users"][authorid]["verified"]:
