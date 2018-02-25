@@ -15,7 +15,7 @@ class DegoosSpigot:
 
     def __init__(self, bot):
         self.bot = bot
-        self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/checkbuyer?"
+        self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/"
         self.verified_users = dataIO.load_json(os.path.join(folder, "verified_users.json"))
 
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
@@ -26,11 +26,11 @@ class DegoosSpigot:
 
     @checkbuyer.command(pass_context=True)
     async def id(self, ctx, userid):
-        await self.bot.say(requests.get(self.url + "user_id=" + userid).json())
+        await self.bot.say(requests.get(self.url + "checkbuyer?user_id=" + userid).json())
 
     @checkbuyer.command(pass_context=True)
     async def name(self, ctx, username):
-        await self.bot.say(requests.get(self.url + "username=" + username).json())
+        await self.bot.say(requests.get(self.url + "checkbuyer?username=" + username).json())
 
     @commands.command()
     async def punch(self, user: discord.Member):
@@ -41,9 +41,9 @@ class DegoosSpigot:
 
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
     async def verify(self, ctx, *, your_spigot_account):
-        randomcode = uuid.uuid4()
+        randomcode = str(uuid.uuid4())
         authorid = ctx.message.author.id
-        data = requests.get(self.url + "username=" + your_spigot_account).json()
+        data = requests.get(self.url + "checkbuyer?username=" + your_spigot_account).json()
 
         await self.bot.say('JSON Parsed: ' + str(data))
         if 'bought' in data and 'spigotid' in data:
@@ -53,8 +53,19 @@ class DegoosSpigot:
                         await self.bot.say('You are already verified!')
                 else:
                     # todo: send message to spigot user
-                    self.verified_users["users"][authorid] = {"spigotid": data["spigotid"], "authcode": str(randomcode),
-                                                              "verified": False}
+                    data = requests.get(
+                        self.url + "sendauth?username=" + your_spigot_account + "&authcode=" + randomcode + "&hash_key=*degoos%team*").json()
+                    if 'messageSent' in data:
+                        if data['messageSent']:
+                            self.verified_users["users"][authorid] = {"spigotid": data["spigotid"],
+                                                                      "authcode": randomcode, "verified": False}
+                            await self.bot.say(
+                                'We\'ve sent you a Private Message in Spigot with your Authorization Code. Check it!')
+                        else:
+                            await self.bot.say('Something went wrong. Please try again later.')
+                    else:
+                        await self.bot.say('Something went wrong. Please try again later.')
+
                 await self.bot.say('Random UUID: ' + str(self.verified_users["users"]))
             else:
                 await self.bot.say('You haven\'t bought any of our plugins.')
