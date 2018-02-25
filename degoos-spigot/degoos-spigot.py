@@ -8,13 +8,24 @@ class DegoosSpigot:
 
     def __init__(self, bot):
         self.bot = bot
-        self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/checkbuyer?user_id="
+        self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/checkbuyer?"
 
     @commands.command()
-    async def verify(self, spigotID):
+    async def verify(self, type, userinfo):
         """Verify the user and his plugins!"""
-        response = requests.get(self.url + spigotID)
-        data = response.json()
+        node = ""
+        if type == "id":
+            node = "user_id=" + userinfo
+        elif type == "name":
+            node = "username=" + userinfo
+        else:
+            node = None
+
+        if node:
+            response = requests.get(self.url + node)
+            data = response.json()
+        else:
+            data = "You can only search by 'id' or 'name':\n!verify name IhToN"
 
         #Your code will go here
         await self.bot.say(data)
