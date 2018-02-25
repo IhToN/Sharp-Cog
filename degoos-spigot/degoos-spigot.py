@@ -32,26 +32,37 @@ class DegoosSpigot:
     async def name(self, ctx, username):
         await self.bot.say(requests.get(self.url + "checkbuyer?username=" + username).json())
 
+    @checkbuyer.command(pass_context=True)
+    async def discord(self, ctx, discord_user: discord.User):
+        discordid = discord_user.id
+        if discordid in self.verified_users["users"]:
+            if self.verified_users["users"][discordid]["verified"]:
+                spigotid = self.verified_users["users"][discordid]["spigotid"]
+                data = requests.get(self.url + "checkbuyer?user_id=" + spigotid).json()
+                await self.bot.say(str(data))
+            else:
+                await self.bot.say(str(discord_user) + " is not verified yet.")
+        else:
+            await self.bot.say(str(discord_user) + " has not registered in the system yet.")
+
     @commands.command()
     async def punch(self, user: discord.Member):
         """I will puch anyone! >.<"""
-
-        # Your code will go here
         await self.bot.say("ONE PUNCH! And " + user.mention + " is out! ლ(ಠ益ಠლ)")
 
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
     async def verify(self, ctx, *, your_spigot_account):
-        randomcode = str(uuid.uuid4())
         authorid = ctx.message.author.id
-        data = requests.get(self.url + "checkbuyer?username=" + your_spigot_account).json()
+        if authorid in self.verified_users["users"]:
+            if self.verified_users["users"][authorid]["verified"]:
+                await self.bot.say('You are already verified!')
+        else:
+            randomcode = str(uuid.uuid4())
+            data = requests.get(self.url + "checkbuyer?username=" + your_spigot_account).json()
 
-        await self.bot.say('JSON Parsed: ' + str(data))
-        if 'bought' in data and 'spigotid' in data:
-            if len(data['bought']) > 0 and data['spigotid'] != -1:
-                if authorid in self.verified_users["users"]:
-                    if self.verified_users["users"][authorid]["verified"]:
-                        await self.bot.say('You are already verified!')
-                else:
+            await self.bot.say('JSON Parsed: ' + str(data))
+            if 'bought' in data and 'spigotid' in data:
+                if len(data['bought']) > 0 and data['spigotid'] != -1:
                     request = requests.get(
                         self.url + "sendauth?username=" + your_spigot_account + "&auth_code=" + randomcode + "&hash_key=deg-tem-159")
                     await self.bot.say('Data requested: ' + str(request))
@@ -67,11 +78,11 @@ class DegoosSpigot:
                     else:
                         await self.bot.say('Something went wrong. Please try again later.')
 
-                await self.bot.say('Random UUID: ' + str(self.verified_users["users"]))
+                    await self.bot.say('Random UUID: ' + str(self.verified_users["users"]))
+                else:
+                    await self.bot.say('You haven\'t bought any of our plugins.')
             else:
-                await self.bot.say('You haven\'t bought any of our plugins.')
-        else:
-            await self.bot.say('Our verification server is busy, please try again later.')
+                await self.bot.say('Our verification server is busy, please try again later.')
 
     @verify.command(pass_context=True)
     async def auth(self, ctx, authcode: str):
@@ -93,10 +104,11 @@ class DegoosSpigot:
 
     @verify.command(pass_context=True)
     @checks.is_owner()
-    async def refresh(self, ctx):
+    async def reload(self, ctx):
         """Confirm authorization code"""
-        self.verified_users = {"users": {}}
-        await self.bot.say("Verification list cleaned.")
+        self.verified_users = dataIO.load_json(os.path.join(folder, "verified_users.json"))
+        await self.bot.say("Verification list reloaded.")
+        await self.bot.say(str(self.verified_users))
 
     async def save_verified_users(self):
         f = os.path.join(folder, "verified_users.json")
