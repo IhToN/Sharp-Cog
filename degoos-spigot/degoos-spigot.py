@@ -54,7 +54,7 @@ class DegoosSpigot:
         """Confirm authorization code"""
 
         await self.bot.say("Authcode introducido: " + authcode)
-        await self.bot.say("Usuario a comprobar: " + str(ctx.message.author))
+        await self.bot.say("Usuario a comprobar: " + ctx.message.author.id)
         # self.settings["TOGGLE"] = not self.settings["TOGGLE"]
         # if self.settings["TOGGLE"]:
         #     await self.bot.say("I will reply on mention.")
