@@ -42,7 +42,13 @@ class DegoosSpigot:
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
     async def verify(self, ctx, *, message):
         randomcode = uuid.uuid4()
-        await self.bot.say('Random UUID: ' + str(randomcode))
+        authorid = ctx.message.author.id
+        if authorid in self.verified_users["users"]:
+            if self.verified_users["users"][authorid]["verified"]:
+                await self.bot.say('You are already verified!')
+        else:
+            self.verified_users["users"][authorid] = {"spigotid": "", "authcode": str(randomcode), "verified": False}
+        await self.bot.say('Random UUID: ' + str(self.verified_users["users"]))
 
     @verify.command(pass_context=True)
     @checks.is_owner()
@@ -67,7 +73,7 @@ def check_folders():
 
 def check_files():
     f = os.path.join(folder, "verified_users.json")
-    data = {"users": []}
+    data = {"users": {}}
     if not dataIO.is_valid_json(f):
         dataIO.save_json(f, data)
 
