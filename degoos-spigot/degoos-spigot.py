@@ -55,9 +55,9 @@ class DegoosSpigot:
                     request = requests.get(
                         self.url + "sendauth?username=" + your_spigot_account + "&auth_code=" + randomcode + "&hash_key=deg-tem-159")
                     await self.bot.say('Data requested: ' + str(request))
-                    data = request.json()
-                    if 'messageSent' in data:
-                        if data['messageSent']:
+                    msgData = request.json()
+                    if 'messageSent' in msgData:
+                        if msgData['messageSent']:
                             self.verified_users["users"][authorid] = {"spigotid": data["spigotid"],
                                                                       "authcode": randomcode, "verified": False}
                             await self.bot.say(
