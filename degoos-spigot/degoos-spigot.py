@@ -4,6 +4,7 @@ from cogs.utils import checks
 from cogs.utils.dataIO import dataIO
 import json
 import os
+import uuid
 import requests
 
 folder = os.path.join('data', 'degoos')
@@ -17,25 +18,19 @@ class DegoosSpigot:
         self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/checkbuyer?"
         self.verified_users = dataIO.load_json(os.path.join(folder, "verified_users.json"))
 
-    @commands.command()
+    @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
     async def checkbuyer(self, type, userinfo):
         """Verify the user and his plugins!"""
-        node = ""
-        if type == "id":
-            node = "user_id=" + userinfo
-        elif type == "name":
-            node = "username=" + userinfo
-        else:
-            node = None
 
-        if node:
-            response = requests.get(self.url + node)
-            data = response.json()
-        else:
-            data = "You can only search by 'id' or 'name':\n!verify name IhToN"
+        await self.bot.say("You can only search by 'id', 'name' or 'user':\n!verify name IhToN")
 
-        # Your code will go here
-        await self.bot.say(data)
+    @checkbuyer.command(pass_context=True)
+    async def id(self, ctx, userid):
+        await self.bot.say(requests.get(self.url + "user_id=" + userid).json())
+
+    @checkbuyer.command(pass_context=True)
+    async def id(self, ctx, username):
+        await self.bot.say(requests.get(self.url + "username=" + username).json())
 
     @commands.command()
     async def punch(self, user: discord.Member):
@@ -46,7 +41,8 @@ class DegoosSpigot:
 
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
     async def verify(self, ctx, *, message):
-        await self.bot.say('Verify command')
+        randomcode = uuid.uuid4()
+        await self.bot.say('Random UUID: ' + str(randomcode))
 
     @verify.command(pass_context=True)
     @checks.is_owner()
@@ -61,6 +57,7 @@ class DegoosSpigot:
         # else:
         #     await self.bot.say("I won't reply on mention anymore.")
         # dataIO.save_json("data/apiai/settings.json", self.settings)
+
 
 def check_folders():
     if not os.path.exists(folder):
