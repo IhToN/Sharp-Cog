@@ -77,6 +77,7 @@ class DegoosSpigot:
         else:
             await self.bot.say(
                 'We couln\'t find your user in our verification list. Have you used the !verify YourUser command?')
+
         await self.bot.say("Authcode introducido: " + authcode)
         await self.bot.say("Usuario a comprobar: " + ctx.message.author.id)
         # self.settings["TOGGLE"] = not self.settings["TOGGLE"]
