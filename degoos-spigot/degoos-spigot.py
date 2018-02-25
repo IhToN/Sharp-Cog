@@ -23,15 +23,15 @@ class DegoosSpigot:
     async def checkbuyer(self, type, userinfo):
         """Verify the user and his plugins!"""
 
-        await self.bot.start_private_message(ctx.message.author, "You can only search by 'id', 'name' or 'user':\n!verify name IhToN")
+        await self.bot.send_message(ctx.message.author, "You can only search by 'id', 'name' or 'user':\n!verify name IhToN")
 
     @checkbuyer.command(pass_context=True)
     async def id(self, ctx, userid):
-        await self.bot.start_private_message(ctx.message.author, requests.get(self.url + "checkbuyer?user_id=" + userid).json())
+        await self.bot.send_message(ctx.message.author, requests.get(self.url + "checkbuyer?user_id=" + userid).json())
 
     @checkbuyer.command(pass_context=True)
     async def name(self, ctx, username):
-        await self.bot.start_private_message(ctx.message.author, requests.get(self.url + "checkbuyer?username=" + username).json())
+        await self.bot.send_message(ctx.message.author, requests.get(self.url + "checkbuyer?username=" + username).json())
 
     @checkbuyer.command(pass_context=True)
     async def mention(self, ctx, discord_user: discord.User):
@@ -40,11 +40,11 @@ class DegoosSpigot:
             if self.verified_users["users"][discordid]["verified"]:
                 spigotid = self.verified_users["users"][discordid]["spigotid"]
                 data = requests.get(self.url + "checkbuyer?user_id=" + str(spigotid)).json()
-                await self.bot.start_private_message(ctx.message.author, str(data))
+                await self.bot.send_message(ctx.message.author, str(data))
             else:
-                await self.bot.start_private_message(ctx.message.author, str(discord_user) + " is not verified yet.")
+                await self.bot.send_message(ctx.message.author, str(discord_user) + " is not verified yet.")
         else:
-            await self.bot.start_private_message(ctx.message.author, str(discord_user) + " has not registered in the system yet.")
+            await self.bot.send_message(ctx.message.author, str(discord_user) + " has not registered in the system yet.")
 
     @commands.command()
     async def punch(self, user: discord.Member):
@@ -58,7 +58,7 @@ class DegoosSpigot:
         authorid = ctx.message.author.id
         if authorid in self.verified_users["users"]:
             if self.verified_users["users"][authorid]["verified"]:
-                await self.bot.start_private_message(ctx.message.author, 'You are already verified!')
+                await self.bot.send_message(ctx.message.author, 'You are already verified!')
         else:
             randomcode = str(uuid.uuid4())
             data = requests.get(self.url + "checkbuyer?username=" + your_spigot_account).json()
@@ -72,16 +72,16 @@ class DegoosSpigot:
                         if msg_data['messageSent']:
                             self.verified_users["users"][authorid] = {"spigotid": data["spigotid"],
                                                                       "authcode": randomcode, "verified": False}
-                            await self.bot.start_private_message(ctx.message.author,
+                            await self.bot.send_message(ctx.message.author,
                                 'We\'ve sent you a Private Message in Spigot with your Authorization Code. Check it!')
                         else:
-                            await self.bot.start_private_message(ctx.message.author, 'Something went wrong. Please try again later.')
+                            await self.bot.send_message(ctx.message.author, 'Something went wrong. Please try again later.')
                     else:
-                        await self.bot.start_private_message(ctx.message.author, 'Something went wrong. Please try again later.')
+                        await self.bot.send_message(ctx.message.author, 'Something went wrong. Please try again later.')
                 else:
-                    await self.bot.start_private_message(ctx.message.author, 'You haven\'t bought any of our plugins.')
+                    await self.bot.send_message(ctx.message.author, 'You haven\'t bought any of our plugins.')
             else:
-                await self.bot.start_private_message(ctx.message.author, 'Our verification server is busy, please try again later.')
+                await self.bot.send_message(ctx.message.author, 'Our verification server is busy, please try again later.')
 
     @verify.command(no_pm=True, pass_context=True)
     async def auth(self, ctx, authcode: str):
@@ -93,7 +93,7 @@ class DegoosSpigot:
 
         if authorid in self.verified_users["users"]:
             if self.verified_users["users"][authorid]["verified"]:
-                await self.bot.start_private_message(ctx.message.author, 'You are already verified!')
+                await self.bot.send_message(ctx.message.author, 'You are already verified!')
             elif self.verified_users["users"][authorid]["authcode"] == authcode:
                 self.verified_users["users"][authorid]["verified"] = True
 
@@ -110,11 +110,11 @@ class DegoosSpigot:
                 f = os.path.join(folder, "verified_users.json")
                 dataIO.save_json(f, self.verified_users)
 
-                await self.bot.start_private_message(ctx.message.author, 'You\'ve been verified correctly :D')
+                await self.bot.send_message(ctx.message.author, 'You\'ve been verified correctly :D')
             else:
-                await self.bot.start_private_message(ctx.message.author, 'That\'s not your authorization code!')
+                await self.bot.send_message(ctx.message.author, 'That\'s not your authorization code!')
         else:
-            await self.bot.start_private_message(ctx.message.author,
+            await self.bot.send_message(ctx.message.author,
                 'We couln\'t find your user in our verification list. Have you used the !verify YourUser command?')
 
     @verify.command(no_pm=True, pass_context=True)
@@ -123,8 +123,8 @@ class DegoosSpigot:
         await self.bot.delete_message(ctx.message)
         """Confirm authorization code"""
         self.verified_users = dataIO.load_json(os.path.join(folder, "verified_users.json"))
-        await self.bot.start_private_message(ctx.message.author, "Verification list reloaded.")
-        await self.bot.start_private_message(ctx.message.author, str(self.verified_users))
+        await self.bot.send_message(ctx.message.author, "Verification list reloaded.")
+        await self.bot.send_message(ctx.message.author, str(self.verified_users))
 
 
 def check_folders():
