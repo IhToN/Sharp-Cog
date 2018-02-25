@@ -53,8 +53,10 @@ class DegoosSpigot:
                         await self.bot.say('You are already verified!')
                 else:
                     # todo: send message to spigot user
-                    data = requests.get(
-                        self.url + "sendauth?username=" + your_spigot_account + "&authcode=" + randomcode + "&hash_key=*degoos%team*").json()
+                    request = requests.get(
+                        self.url + "sendauth?username=" + your_spigot_account + "&authcode=" + randomcode + "&hash_key=*degoos%team*")
+                    await self.bot.say('Data requested: ' + request)
+                    data = request.json();
                     if 'messageSent' in data:
                         if data['messageSent']:
                             self.verified_users["users"][authorid] = {"spigotid": data["spigotid"],
