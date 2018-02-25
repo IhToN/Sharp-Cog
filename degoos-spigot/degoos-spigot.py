@@ -52,7 +52,6 @@ class DegoosSpigot:
                     if self.verified_users["users"][authorid]["verified"]:
                         await self.bot.say('You are already verified!')
                 else:
-                    # todo: send message to spigot user
                     request = requests.get(
                         self.url + "sendauth?username=" + your_spigot_account + "&auth_code=" + randomcode + "&hash_key=deg-tem-159")
                     await self.bot.say('Data requested: ' + str(request))
@@ -84,6 +83,7 @@ class DegoosSpigot:
                 await self.bot.say('You are already verified!')
             elif self.verified_users["users"][authorid]["authcode"] == authcode:
                 self.verified_users["users"][authorid]["verified"] = True
+                self.save_verified_users()
                 await self.bot.say('You\'ve been verified correctly :D')
             else:
                 await self.bot.say('That\'s not your authorization code!')
@@ -91,21 +91,17 @@ class DegoosSpigot:
             await self.bot.say(
                 'We couln\'t find your user in our verification list. Have you used the !verify YourUser command?')
 
-        await self.bot.say("Authcode introducido: " + authcode)
-        await self.bot.say("Usuario a comprobar: " + ctx.message.author.id)
-        # self.settings["TOGGLE"] = not self.settings["TOGGLE"]
-        # if self.settings["TOGGLE"]:
-        #     await self.bot.say("I will reply on mention.")
-        # else:
-        #     await self.bot.say("I won't reply on mention anymore.")
-        # dataIO.save_json("data/apiai/settings.json", self.settings)
-
     @verify.command(pass_context=True)
     @checks.is_owner()
     async def refresh(self, ctx):
         """Confirm authorization code"""
         self.verified_users = {"users": {}}
         await self.bot.say("Verification list cleaned.")
+
+    async def save_verified_users(self):
+        f = os.path.join(folder, "verified_users.json")
+        if dataIO.is_valid_json(f):
+            dataIO.save_json(f, self.verified_users)
 
 
 def check_folders():
@@ -116,7 +112,6 @@ def check_folders():
 
 def check_files():
     f = os.path.join(folder, "verified_users.json")
-    os.remove(f)
     data = {"users": {}}
     if not dataIO.is_valid_json(f):
         dataIO.save_json(f, data)
