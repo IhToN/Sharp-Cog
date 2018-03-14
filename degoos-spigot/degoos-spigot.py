@@ -89,7 +89,6 @@ class DegoosSpigot:
         """Confirm authorization code"""
         author = ctx.message.author
         authorid = author.id
-        server = ctx.message.server
 
         if authorid in self.verified_users["users"]:
             if self.verified_users["users"][authorid]["verified"]:
@@ -99,15 +98,17 @@ class DegoosSpigot:
 
                 roles = False
                 try:
-                    roles = server.roles
+                    roles = [role for role in ctx.message.server.roles if not role.is_everyone]
+                    print('Server roles: ' + str(roles))
                 except AttributeError:
                     print("This server has no roles... what even?\n")
 
                 if roles:
-                    role = discord.utils.get(roles, id=verified_role)
-                    self.bot.add_roles(author, role)
-                    self.bot.send_message(ctx.message.author, 'We\'ve updated your role to: ' + str(role))
-                    print('We\'ve updated your role to: ' + str(role))
+                    role = discord.utils.get(roles, name=verified_role)
+                    if role is not None:
+                        self.bot.add_roles(author, role)
+                        self.bot.send_message(ctx.message.author, 'We\'ve updated your role to: ' + str(role))
+                        print('We\'ve updated your role to: ' + str(role))
 
                 f = os.path.join(folder, "verified_users.json")
                 dataIO.save_json(f, self.verified_users)
