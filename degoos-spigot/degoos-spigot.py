@@ -91,6 +91,8 @@ class DegoosSpigot:
         author = ctx.message.author
         authorid = author.id
 
+        await self.bot.send_message(ctx.message.author, 'We are going to check your verification status, give us a moment, please.')
+
         print('Comprobamos usuario en verify')
         if authorid in self.verified_users["users"]:
             print('Usuario está en la lista de espera')
@@ -114,8 +116,8 @@ class DegoosSpigot:
                     role = discord.utils.get(roles, name=verified_role)
                     if role is not None:
                         print('Se ha encontrado el rol: ' + str(role))
-                        self.bot.add_roles(author, role)
-                        self.bot.send_message(ctx.message.author, 'We\'ve updated your role to: ' + str(role))
+                        await self.bot.add_roles(author, role)
+                        await self.bot.send_message(ctx.message.author, 'We\'ve updated your role to: ' + str(role))
                         print('We\'ve updated your role to: ' + str(role))
 
                 f = os.path.join(folder, "verified_users.json")
