@@ -105,7 +105,9 @@ class DegoosSpigot:
 
                 if roles:
                     role = discord.utils.get(roles, id=verified_role)
-                    await self.bot.add_roles(author, role)
+                    self.bot.add_roles(author, role)
+                    self.bot.send_message(ctx.message.author, 'We\'ve updated your role to: ' + str(role))
+                    print('We\'ve updated your role to: ' + str(role))
 
                 f = os.path.join(folder, "verified_users.json")
                 dataIO.save_json(f, self.verified_users)
