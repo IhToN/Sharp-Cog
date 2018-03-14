@@ -17,7 +17,7 @@ class DegoosSpigot:
         self.bot = bot
         self.url = "http://vps168498.ovh.net:9080/SpigotBuyerCheck-1.0-SNAPSHOT/api/"
         self.verified_users = dataIO.load_json(os.path.join(folder, "verified_users.json"))
-        print('Verified users loaded: ' + str(len(self.verified_users)))
+        print('Verified users loaded: ' + str(len(self.verified_users['users'])))
 
     @commands.group(no_pm=False, invoke_without_command=True, pass_context=True)
     async def checkbuyer(self, ctx):
