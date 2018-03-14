@@ -85,27 +85,35 @@ class DegoosSpigot:
 
     @verify.command(no_pm=True, pass_context=True)
     async def auth(self, ctx, authcode: str):
+        print('Borramos mensaje')
         await self.bot.delete_message(ctx.message)
         """Confirm authorization code"""
         author = ctx.message.author
         authorid = author.id
 
+        print('Comprobamos usuario en verify')
         if authorid in self.verified_users["users"]:
+            print('Usuario está en la lista de espera')
             if self.verified_users["users"][authorid]["verified"]:
+                print('Usuario está verificado')
                 await self.bot.send_message(ctx.message.author, 'You are already verified!')
             elif self.verified_users["users"][authorid]["authcode"] == authcode:
+                print('Authcode correcto')
                 self.verified_users["users"][authorid]["verified"] = True
 
                 roles = False
                 try:
+                    print('Cargamos roles')
                     roles = [role for role in ctx.message.server.roles if not role.is_everyone]
                     print('Server roles: ' + str(roles))
                 except AttributeError:
                     print("This server has no roles... what even?\n")
 
                 if roles:
+                    print('Hay roles')
                     role = discord.utils.get(roles, name=verified_role)
                     if role is not None:
+                        print('Se ha encontrado el rol: ' + str(role))
                         self.bot.add_roles(author, role)
                         self.bot.send_message(ctx.message.author, 'We\'ve updated your role to: ' + str(role))
                         print('We\'ve updated your role to: ' + str(role))
@@ -113,8 +121,10 @@ class DegoosSpigot:
                 f = os.path.join(folder, "verified_users.json")
                 dataIO.save_json(f, self.verified_users)
 
+                print('Verificado el usuario y guardado')
                 await self.bot.send_message(ctx.message.author, 'You\'ve been verified correctly :D')
             else:
+                print('Authcode incorrecto')
                 await self.bot.send_message(ctx.message.author, 'That\'s not your authorization code!')
         else:
             await self.bot.send_message(ctx.message.author,
