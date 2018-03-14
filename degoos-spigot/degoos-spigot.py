@@ -51,7 +51,7 @@ class DegoosSpigot:
         """I will puch anyone! >.<"""
         await self.bot.say("ONE PUNCH! And " + user.mention + " is out! ლ(ಠ益ಠლ)")
 
-    @commands.group(no_pm=True, pass_context=True)
+    @commands.group(invoke_without_command=True, no_pm=True, pass_context=True)
     async def verify(self, ctx, *, your_spigot_account):
         await self.bot.delete_message(ctx.message)
 
@@ -59,6 +59,8 @@ class DegoosSpigot:
         if authorid in self.verified_users["users"]:
             if self.verified_users["users"][authorid]["verified"]:
                 await self.bot.send_message(ctx.message.author, 'You are already verified!')
+            else:
+                await self.bot.send_message(ctx.message.author, 'Check your Spigot Inbox or ask and Admin :wink:')
         else:
             randomcode = str(uuid.uuid4())
             data = requests.get(self.url + "checkbuyer?username=" + your_spigot_account).json()
@@ -86,7 +88,7 @@ class DegoosSpigot:
     @verify.command(no_pm=True, pass_context=True)
     async def auth(self, ctx, authcode: str):
         print('Borramos mensaje')
-        await self.bot.delete_message(ctx.message)
+        #await self.bot.delete_message(ctx.message)
         """Confirm authorization code"""
         author = ctx.message.author
         authorid = ctx.message.author.id
