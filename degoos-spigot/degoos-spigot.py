@@ -89,7 +89,7 @@ class DegoosSpigot:
         await self.bot.delete_message(ctx.message)
         """Confirm authorization code"""
         author = ctx.message.author
-        authorid = author.id
+        authorid = ctx.message.author.id
 
         await self.bot.send_message(ctx.message.author, 'We are going to check your verification status, give us a moment, please.')
 
@@ -103,22 +103,22 @@ class DegoosSpigot:
                 print('Authcode correcto')
                 self.verified_users["users"][authorid]["verified"] = True
 
-                roles = False
-                try:
-                    print('Cargamos roles')
-                    roles = [role for role in ctx.message.server.roles if not role.is_everyone]
-                    print('Server roles: ' + str(roles))
-                except AttributeError:
-                    print("This server has no roles... what even?\n")
-
-                if roles:
-                    print('Hay roles')
-                    role = discord.utils.get(roles, name=verified_role)
-                    if role is not None:
-                        print('Se ha encontrado el rol: ' + str(role))
-                        await self.bot.add_roles(author, role)
-                        await self.bot.send_message(ctx.message.author, 'We\'ve updated your role to: ' + str(role))
-                        print('We\'ve updated your role to: ' + str(role))
+                # roles = False
+                # try:
+                #     print('Cargamos roles')
+                #     roles = [role for role in ctx.message.server.roles if not role.is_everyone]
+                #     print('Server roles: ' + str(roles))
+                # except AttributeError:
+                #     print("This server has no roles... what even?\n")
+                #
+                # if roles:
+                #     print('Hay roles')
+                #     role = discord.utils.get(roles, name=verified_role)
+                #     if role is not None:
+                #         print('Se ha encontrado el rol: ' + str(role))
+                #         await self.bot.add_roles(author, role)
+                #         await self.bot.send_message(ctx.message.author, 'We\'ve updated your role to: ' + str(role))
+                #         print('We\'ve updated your role to: ' + str(role))
 
                 f = os.path.join(folder, "verified_users.json")
                 dataIO.save_json(f, self.verified_users)
