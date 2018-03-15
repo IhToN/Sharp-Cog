@@ -91,7 +91,9 @@ class DegoosSpigot:
             server = ctx.message.server
             user_id = key
             if server:
-                user_id = server.get_member(int(key))
+                member = server.get_member(key)
+                if member:
+                    user_id = member.name
             message += '· ' + user_id + '\n'
         message += '```'
         await self.bot.send_message(ctx.message.author, message)
