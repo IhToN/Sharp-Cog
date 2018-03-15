@@ -93,10 +93,29 @@ class DegoosSpigot:
             if server:
                 member = server.get_member(key)
                 if member:
-                    user_id = member.mention
+                    user_id = member.name
             message += '· ' + user_id + '\n'
         message += '```'
         await self.bot.send_message(ctx.message.author, message)
+
+    @checkbuyer.command(name='public_all', aliases=['pall'], pass_context=True)
+    @checks.admin_or_permissions(view_audit_logs=True)
+    async def _pall(self, ctx):
+        if ctx.message.server:
+            await self.bot.delete_message(ctx.message)
+
+        message = '```javascript' + '\n'
+        message += 'Current verified Discord users: \n'
+        for key, value in self.verified_users["users"].items():
+            server = ctx.message.server
+            user_id = key
+            if server:
+                member = server.get_member(key)
+                if member:
+                    user_id = member.name
+            message += '· ' + user_id + '\n'
+        message += '```'
+        await self.bot.send_message(message)
 
     @checkbuyer.command(name='json', pass_context=True)
     @checks.admin_or_permissions(view_audit_logs=True)
