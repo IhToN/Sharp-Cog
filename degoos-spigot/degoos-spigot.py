@@ -188,7 +188,7 @@ class DegoosSpigot:
                                         'We couln\'t find your user in our verification list. Have you used the !verify YourUser command?')
 
     @verify.command(name='reload', no_pm=True, pass_context=True)
-    @checks.is_owner()
+    @checks.admin_or_permissions(manage_server=True)
     async def reload(self, ctx):
         await self.bot.delete_message(ctx.message)
         """Confirm authorization code"""
