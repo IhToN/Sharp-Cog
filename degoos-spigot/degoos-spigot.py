@@ -5,6 +5,7 @@ from cogs.utils.dataIO import dataIO
 import os
 import uuid
 import requests
+import json
 
 folder = os.path.join('data', 'degoos')
 verified_role = 'Verified'
@@ -66,7 +67,7 @@ class DegoosSpigot:
     async def _json(self, ctx):
         #await self.bot.delete_message(ctx.message)
         await self.bot.send_message(ctx.message.author, 'Verified Discord Users:')
-        await self.bot.send_message(ctx.message.author, str(self.verified_users))
+        await self.bot.send_message(ctx.message.author, json.dumps(self.verified_users, sort_keys=True, indent=4))
 
     @commands.command()
     async def punch(self, user: discord.Member):
