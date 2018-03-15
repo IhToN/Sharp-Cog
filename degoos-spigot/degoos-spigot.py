@@ -115,7 +115,7 @@ class DegoosSpigot:
                     user_id = member.mention
             message += '· ' + user_id + '\n'
         message += '```'
-        await self.bot.send_message(message)
+        await self.bot.say(message)
 
     @checkbuyer.command(name='json', pass_context=True)
     @checks.admin_or_permissions(view_audit_logs=True)
