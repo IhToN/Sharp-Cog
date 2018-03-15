@@ -104,7 +104,7 @@ class DegoosSpigot:
         if ctx.message.server:
             await self.bot.delete_message(ctx.message)
 
-        message += 'Current verified Discord users: \n'
+        message = 'Current verified Discord users: \n'
         for key, value in self.verified_users["users"].items():
             server = ctx.message.server
             user_id = key
