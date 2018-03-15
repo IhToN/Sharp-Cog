@@ -112,7 +112,7 @@ class DegoosSpigot:
             if server:
                 member = server.get_member(key)
                 if member:
-                    user_id = member.name
+                    user_id = member.mention
             message += '· ' + user_id + '\n'
         message += '```'
         await self.bot.send_message(message)
