@@ -21,13 +21,15 @@ class DegoosSpigot:
         print('Verified users loaded: ' + str(len(self.verified_users['users'])))
 
     @commands.group(name='checkbuyer', aliases=['cb'], no_pm=False, invoke_without_command=True, pass_context=True)
+    @checks.admin_or_permissions(view_audit_logs=True)
     async def checkbuyer(self, ctx):
         """Verify the user and his plugins!"""
 
         await self.bot.send_message(ctx.message.author,
-                                    "You can only search by 'id', 'name' or 'user':\n!verify name IhToN")
+                                    "You can only search by 'id', 'name' or 'user':\n!checkbuyer name IhToN")
 
     @checkbuyer.command(name='id', pass_context=True)
+    @checks.admin_or_permissions(view_audit_logs=True)
     async def id(self, ctx, userid):
         if ctx.message.server:
             await self.bot.delete_message(ctx.message)
@@ -41,6 +43,7 @@ class DegoosSpigot:
         await self.bot.send_message(ctx.message.author, message)
 
     @checkbuyer.command(name='name', pass_context=True)
+    @checks.admin_or_permissions(view_audit_logs=True)
     async def name(self, ctx, username):
         if ctx.message.server:
             await self.bot.delete_message(ctx.message)
@@ -54,6 +57,7 @@ class DegoosSpigot:
         await self.bot.send_message(ctx.message.author, message)
 
     @checkbuyer.command(name='mention', aliases=['user'], pass_context=True)
+    @checks.admin_or_permissions(view_audit_logs=True)
     async def mention(self, ctx, discord_user: discord.User):
         if ctx.message.server:
             await self.bot.delete_message(ctx.message)
@@ -76,7 +80,7 @@ class DegoosSpigot:
                                         str(discord_user) + " has not registered in the system yet.")
 
     @checkbuyer.command(name='all', pass_context=True)
-    @checks.is_owner()
+    @checks.admin_or_permissions(view_audit_logs=True)
     async def _all(self, ctx):
         if ctx.message.server:
             await self.bot.delete_message(ctx.message)
@@ -88,12 +92,12 @@ class DegoosSpigot:
             user_id = key
             if server:
                 user_id = server.get_member(int(key))
-            message += '· ' + user_id
+            message += '· ' + user_id + '\n'
         message += '```'
         await self.bot.send_message(ctx.message.author, message)
 
     @checkbuyer.command(name='json', pass_context=True)
-    @checks.is_owner()
+    @checks.admin_or_permissions(view_audit_logs=True)
     async def _json(self, ctx):
         if ctx.message.server:
             await self.bot.delete_message(ctx.message)
