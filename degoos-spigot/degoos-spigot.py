@@ -29,25 +29,41 @@ class DegoosSpigot:
 
     @checkbuyer.command(name='id', pass_context=True)
     async def id(self, ctx, userid):
-        #await self.bot.delete_message(ctx.message)
-        await self.bot.send_message(ctx.message.author, requests.get(self.url + "checkbuyer?user_id=" + userid).json())
+        # await self.bot.delete_message(ctx.message)
+        js_data = requests.get(self.url + "checkbuyer?user_id=" + userid).json()
+
+        message = '```javascript' + '\n'
+        message += 'User Data: \n'
+        message += json.dumps(js_data, sort_keys=True, indent=4)
+        message += '```'
+        await self.bot.send_message(ctx.message.author, message)
 
     @checkbuyer.command(name='name', pass_context=True)
     async def name(self, ctx, username):
-        #await self.bot.delete_message(ctx.message)
-        await self.bot.send_message(ctx.message.author,
-                                    requests.get(self.url + "checkbuyer?username=" + username).json())
+        # await self.bot.delete_message(ctx.message)
+        js_data = requests.get(self.url + "checkbuyer?username=" + username).json()
+
+        message = '```javascript' + '\n'
+        message += 'User Data: \n'
+        message += json.dumps(js_data, sort_keys=True, indent=4)
+        message += '```'
+        await self.bot.send_message(ctx.message.author, message)
 
     @checkbuyer.command(name='mention', aliases=['user'], pass_context=True)
     async def mention(self, ctx, discord_user: discord.User):
-        #await self.bot.delete_message(ctx.message)
+        # await self.bot.delete_message(ctx.message)
 
         discordid = discord_user.id
         if discordid in self.verified_users["users"]:
             if self.verified_users["users"][discordid]["verified"]:
                 spigotid = self.verified_users["users"][discordid]["spigotid"]
-                data = requests.get(self.url + "checkbuyer?user_id=" + str(spigotid)).json()
-                await self.bot.send_message(ctx.message.author, str(data))
+                js_data = requests.get(self.url + "checkbuyer?user_id=" + str(spigotid)).json()
+
+                message = '```javascript' + '\n'
+                message += 'User Data: \n'
+                message += json.dumps(js_data, sort_keys=True, indent=4)
+                message += '```'
+                await self.bot.send_message(ctx.message.author, message)
             else:
                 await self.bot.send_message(ctx.message.author, str(discord_user) + " is not verified yet.")
         else:
@@ -57,17 +73,26 @@ class DegoosSpigot:
     @checkbuyer.command(name='all', pass_context=True)
     @checks.is_owner()
     async def _all(self, ctx):
-        #await self.bot.delete_message(ctx.message)
-        await self.bot.send_message(ctx.message.author, 'Verified Discord Users:')
-        for key, value in self.verified_users["users"]:
-            await self.bot.send_message(ctx.message.author, '· ' + key)
+        # await self.bot.delete_message(ctx.message)
+        message = '```javascript' + '\n'
+        message += 'Verified Discord Users: \n'
+        for key, value in self.verified_users["users"].items():
+            message += '· ' + key
+            server = ctx.message.server
+            member_object = server.get_member(int(key))
+            message += '    - ' + member_object
+        message += '```'
+        await self.bot.send_message(ctx.message.author, message)
 
     @checkbuyer.command(name='json', pass_context=True)
     @checks.is_owner()
     async def _json(self, ctx):
-        #await self.bot.delete_message(ctx.message)
-        await self.bot.send_message(ctx.message.author, 'Verified Discord Users:')
-        await self.bot.send_message(ctx.message.author, json.dumps(self.verified_users, sort_keys=True, indent=4))
+        # await self.bot.delete_message(ctx.message)
+        message = '```javascript' + '\n'
+        message += 'Verified Users: \n'
+        message += json.dumps(self.verified_users, sort_keys=True, indent=4)
+        message += '```'
+        await self.bot.send_message(ctx.message.author, message)
 
     @commands.command()
     async def punch(self, user: discord.Member):
