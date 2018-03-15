@@ -28,18 +28,18 @@ class DegoosSpigot:
 
     @checkbuyer.command(name='id', pass_context=True)
     async def id(self, ctx, userid):
-        await self.bot.delete_message(ctx.message)
+        #await self.bot.delete_message(ctx.message)
         await self.bot.send_message(ctx.message.author, requests.get(self.url + "checkbuyer?user_id=" + userid).json())
 
     @checkbuyer.command(name='name', pass_context=True)
     async def name(self, ctx, username):
-        await self.bot.delete_message(ctx.message)
+        #await self.bot.delete_message(ctx.message)
         await self.bot.send_message(ctx.message.author,
                                     requests.get(self.url + "checkbuyer?username=" + username).json())
 
     @checkbuyer.command(name='mention', aliases=['user'], pass_context=True)
     async def mention(self, ctx, discord_user: discord.User):
-        await self.bot.delete_message(ctx.message)
+        #await self.bot.delete_message(ctx.message)
 
         discordid = discord_user.id
         if discordid in self.verified_users["users"]:
@@ -56,7 +56,7 @@ class DegoosSpigot:
     @checkbuyer.command(name='all', pass_context=True)
     @checks.is_owner()
     async def _all(self, ctx):
-        await self.bot.delete_message(ctx.message)
+        #await self.bot.delete_message(ctx.message)
         await self.bot.send_message(ctx.message.author, 'Verified Discord Users:')
         for key, value in self.verified_users["users"]:
             await self.bot.send_message(ctx.message.author, '· ' + key)
@@ -64,7 +64,7 @@ class DegoosSpigot:
     @checkbuyer.command(name='json', pass_context=True)
     @checks.is_owner()
     async def _json(self, ctx):
-        await self.bot.delete_message(ctx.message)
+        #await self.bot.delete_message(ctx.message)
         await self.bot.send_message(ctx.message.author, 'Verified Discord Users:')
         await self.bot.send_message(ctx.message.author, str(self.verified_users))
 
