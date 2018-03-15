@@ -104,7 +104,6 @@ class DegoosSpigot:
         if ctx.message.server:
             await self.bot.delete_message(ctx.message)
 
-        message = '```javascript' + '\n'
         message += 'Current verified Discord users: \n'
         for key, value in self.verified_users["users"].items():
             server = ctx.message.server
@@ -114,7 +113,6 @@ class DegoosSpigot:
                 if member:
                     user_id = member.mention
             message += '· ' + user_id + '\n'
-        message += '```'
         await self.bot.say(message)
 
     @checkbuyer.command(name='json', pass_context=True)
